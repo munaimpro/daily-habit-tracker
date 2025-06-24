@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Islamic Habit Tracker</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  
+  <style>
+    body {
+      background-color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #0a3d62;
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
+
+    /* Hero Section with background + dark overlay */
+    #hero {
+      position: relative;
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 3rem 2rem;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #ffffff, #e1e9f0);
+      box-shadow: 0 0 30px rgb(10 61 98 / 0.15);
+      overflow: hidden;
+      text-align: center;
+    }
+    
+    #hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center / cover;
+  border-radius: 25px;
+  z-index: 0;
+}
+
+#hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0.6)
+  );
+  border-radius: 25px;
+  z-index: 1;
+}
+
+
+    #hero-content {
+      position: relative;
+      z-index: 2;
+      color: white;
+    }
+    #hero-content img {
+      max-width: 80px;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+      filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.5));
+    }
+    #hero-content h1 {
+      display: inline-block;
+      font-weight: 700;
+      font-size: 2.8rem;
+      margin-bottom: 0.3rem;
+      vertical-align: middle;
+      text-shadow: 0 0 8px rgba(0,0,0,0.6);
+    }
+    #hero-content p {
+      font-size: 1.3rem;
+      margin-top: 0.6rem;
+      text-shadow: 0 0 6px rgba(0,0,0,0.5);
+    }
+
+    /* Stats Section */
+    #stats {
+      max-width: 1100px;
+      margin: 30px auto;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      flex: 1 1 calc(33.333% - 1rem);
+      background: linear-gradient(135deg, #ffffff, #f7f9fc);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.08);
+      text-align: center;
+      font-weight: 600;
+      color: #05445E;
+      min-width: 250px;
+      transition: transform 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(5,68,94,0.15);
+    }
+    .stat-number {
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+      color: #028090;
+    }
+
+    /* Habit Section */
+    #habits {
+      max-width: 1100px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .habit-card {
+      background: linear-gradient(135deg, #ffffff, #f7f9fc);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.08);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: box-shadow 0.3s ease;
+    }
+    .habit-card:hover {
+      box-shadow: 0 0 25px rgba(5,68,94,0.15);
+    }
+    .habit-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #05445E;
+    }
+    .habit-header i {
+      font-size: 1.8rem;
+      color: #028090;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+    }
+    .habit-streak, .habit-milestone, .habit-reward, .habit-target {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #086788;
+    }
+    .habit-milestone, .habit-reward {
+      font-weight: 600;
+      color: #05668D;
+    }
+    .habit-reward {
+      color: #02C39A;
+    }
+
+    /* Buttons */
+    .btn-habit-complete {
+      margin-top: 1rem;
+      background-color: #028090;
+      color: white;
+      border-radius: 50px;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    .btn-habit-complete:hover:not(:disabled) {
+      background-color: #05668D;
+      color: white;
+    }
+    .btn-habit-complete:disabled {
+      background-color: #9cc7ca;
+      cursor: not-allowed;
+    }
+    .btn-delete {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #f44336;
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    .btn-delete:hover {
+      background-color: #c62828;
+    }
+
+    /* Add Habit Form */
+    #addHabitForm {
+      max-width: 600px;
+      margin: 20px auto;
+      background: linear-gradient(135deg, #ffffff, #f7f9fc);
+      padding: 1rem 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.08);
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    #addHabitForm input, #addHabitForm select {
+      border-radius: 50px;
+      padding: 0.5rem 1rem;
+      border: 1.5px solid #028090;
+      font-weight: 600;
+      color: #05445E;
+      min-width: 180px;
+    }
+    #addHabitForm button {
+      border-radius: 50px;
+      font-weight: 700;
+      background-color: #028090;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.8rem;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    #addHabitForm button:hover {
+      background-color: #05668D;
+    }
+
+    /* Popup Animation */
+    #popup {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #02C39A;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 700;
+      box-shadow: 0 0 15px #02C39Aaa;
+      opacity: 0;
+      transform: translateY(-30px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      z-index: 9999;
+      max-width: 280px;
+      text-align: center;
+    }
+    #popup.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      #stats {
+        flex-direction: column;
+      }
+      .stat-card {
+        flex: 1 1 100%;
+      }
+      #habits {
+        grid-template-columns: 1fr !important;
+      }
+      #addHabitForm {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      #addHabitForm input, #addHabitForm select {
+        min-width: 100%;
+      }
+    }
+
+    .streak-graph {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 12px);
+    gap: 2px;
+    margin-top: 10px;
+    padding-top: 4px;
+    border-top: 1px dashed #ccc;
+    justify-content: start;
+  }
+
+  .streak-cell {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background-color: #e0e0e0;
+  }
+
+  .streak-cell.active {
+    background-color: #028090;
+  }
+
+  .fa-star-and-crescent {
+    background: white;
+    padding: 1rem;
+    border-radius: 100%;
+    color: #02C39A;
+    text-shadow: none !important;
+  }
+  </style>
+
+  <!-- FontAwesome for Islamic icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section id="hero" role="banner" aria-label="App introduction">
+    <div id="hero-content">
+      <h1 aria-label="Islamic Habit Tracker">
+        <i class="fas fa-mosque"></i>
+        Islamic Habit Tracker
+      </h1>
+      <p>Track your daily good habits with faith and discipline — earn rewards, points, and grow your spiritual streak.</p>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section id="stats" aria-label="User statistics overview">
+    <div class="stat-card" tabindex="0">
+      <div>Total Points</div>
+      <div class="stat-number" id="totalPoints">0</div>
+    </div>
+    <div class="stat-card" tabindex="0">
+      <div>Total Rewards</div>
+      <div class="stat-number" id="totalRewards">0</div>
+    </div>
+    <div class="stat-card" tabindex="0">
+      <div>Active Habits</div>
+      <div class="stat-number" id="totalHabits">0</div>
+    </div>
+  </section>
+
+  <!-- Add Habit Form -->
+  <form id="addHabitForm" aria-label="Add a new habit">
+    <input
+      type="text"
+      id="habitName"
+      placeholder="Enter new habit (e.g. Daily Prayer)"
+      aria-label="Habit name"
+      required
+      autocomplete="on"
+    />
+    <select id="targetDays" aria-label="Select target days" required>
+      <option value="" disabled selected>Target days</option>
+      <!-- Options generated by JS -->
+    </select>
+    <button type="submit" id="addHabitBtn" aria-live="polite">Add Habit</button>
+  </form>
+
+  <!-- Habit List Section -->
+  <section id="habits" aria-label="Habit list">
+    <!-- Habit cards inserted here -->
+  </section>
+
+  <!-- Animated Popup -->
+  <div id="popup" role="alert" aria-live="assertive"></div>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    (() => {
+      // Constants
+      const POINTS_PER_DAY = 10;
+      const MAX_TARGET = 365;
+      const TARGET_STEP = 10;
+
+      // Elements
+      const habitsContainer = document.getElementById('habits');
+      const addHabitForm = document.getElementById('addHabitForm');
+      const habitNameInput = document.getElementById('habitName');
+      const targetDaysSelect = document.getElementById('targetDays');
+      const totalPointsEl = document.getElementById('totalPoints');
+      const totalRewardsEl = document.getElementById('totalRewards');
+      const totalHabitsEl = document.getElementById('totalHabits');
+      const popup = document.getElementById('popup');
+
+      // Data Model - load from localStorage or empty array
+      let habits = JSON.parse(localStorage.getItem('islamicHabits')) || [];
+
+      // Populate target days select options dynamically
+      const populateTargetDaysOptions = () => {
+        for (let d = TARGET_STEP; d <= MAX_TARGET; d += TARGET_STEP) {
+          const option = document.createElement('option');
+          option.value = d;
+          option.textContent = `${d} days`;
+          targetDaysSelect.appendChild(option);
+        }
+      };
+      populateTargetDaysOptions();
+
+      // Save habits
+      const saveHabits = () => {
+        localStorage.setItem('islamicHabits', JSON.stringify(habits));
+      };
+
+      // Utility: get today's date YYYY-MM-DD
+      const getToday = () => new Date().toISOString().slice(0, 10);
+
+      // Show popup with animation
+      const showPopup = (msg) => {
+        popup.textContent = msg;
+        popup.classList.add('show');
+        setTimeout(() => popup.classList.remove('show'), 2800);
+      };
+
+      // Islamic icon HTML
+      const getIslamicIcon = () => '<i class="fas fa-star-and-crescent" aria-hidden="true"></i>';
+
+      // Calculate total stats and update UI
+      const calculateTotals = () => {
+        let points = 0, rewards = 0;
+        habits.forEach(h => {
+          points += h.points;
+          rewards += h.rewards;
+        });
+        totalPointsEl.textContent = points;
+        totalRewardsEl.textContent = rewards;
+        totalHabitsEl.textContent = habits.length;
+      };
+
+      // Render habit cards
+      const renderHabits = () => {
+        habitsContainer.innerHTML = '';
+        if (habits.length === 0) {
+          habitsContainer.innerHTML = '<p class="text-center text-muted">No habits yet. Add a habit to start your journey!</p>';
+          calculateTotals();
+          return;
+        }
+
+        habits.forEach(habit => {
+          const card = document.createElement('div');
+          card.classList.add('habit-card');
+
+          card.innerHTML = `
+            <button class="btn-delete" aria-label="Delete habit ${habit.name}">&times;</button>
+            <div class="habit-header" aria-label="Habit name and icon">
+              ${getIslamicIcon()}
+              <span>${habit.name}</span>
+            </div>
+            <div class="habit-streak" aria-label="Current streak">Streak: ${habit.streak} day${habit.streak !== 1 ? 's' : ''}</div>
+            <div class="habit-target" aria-label="Target days">Target: ${habit.targetDays} day${habit.targetDays !== 1 ? 's' : ''}</div>
+            <div class="habit-milestone" aria-label="Milestone level">Milestone Level: ${habit.level}</div>
+            <div class="habit-reward" aria-label="Rewards earned">Rewards: ${habit.rewards}</div>
+            <button class="btn btn-habit-complete" ${habit.completedToday ? 'disabled aria-disabled="true"' : ''}>${habit.completedToday ? 'Completed' : 'Mark Complete'}</button>
+          `;
+
+          // Delete habit handler
+          card.querySelector('.btn-delete').addEventListener('click', () => {
+            habits = habits.filter(h => h.name !== habit.name);
+            saveHabits();
+            renderHabits();
+            showPopup(`Habit "${habit.name}" deleted`);
+          });
+
+          // Complete habit handler
+          card.querySelector('.btn-habit-complete').addEventListener('click', () => {
+            if (habit.completedToday) {
+              showPopup(`You already completed "${habit.name}" today!`);
+              return;
+            }
+
+            const today = getToday();
+            const yesterdayDate = new Date();
+            yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+            const yesterday = yesterdayDate.toISOString().slice(0, 10);
+
+            // If lastCompleted was yesterday, streak continues, else reset streak if gap > 1 day
+            if (habit.lastCompleted === yesterday || habit.lastCompleted === null) {
+              habit.streak++;
+            } else if (habit.lastCompleted === today) {
+              showPopup(`Already completed today!`);
+              return;
+            } else {
+              // Missed day, reset habit progress
+              habit.streak = 1;
+              habit.points = 0;
+              habit.rewards = 0;
+              habit.level = 1;
+              showPopup(`Missed a day! "${habit.name}" streak reset.`);
+            }
+
+            habit.lastCompleted = today;
+            habit.completedToday = true;
+
+            // Push today's date to completedDates[]
+            if (!habit.completedDates) {
+              habit.completedDates = [];
+            }
+            if (!habit.completedDates.includes(today)) {
+              habit.completedDates.push(today);
+            }
+
+            // Calculate points (streak * POINTS_PER_DAY)
+            habit.points = habit.streak * POINTS_PER_DAY;
+
+            // Calculate milestone level & rewards based on targetDays
+            const newLevel = Math.floor(habit.streak / habit.targetDays) + 1;
+            if (newLevel > habit.level) {
+              habit.level = newLevel;
+              habit.rewards += 1; // reward 1 point per milestone
+              showPopup(`🎉 Milestone reached for "${habit.name}"! Reward +1`);
+            } else {
+              showPopup(`+${POINTS_PER_DAY} points for "${habit.name}"`);
+            }
+
+            saveHabits();
+            renderHabits();
+            calculateTotals();
+          });
+
+          const streakGraph = document.createElement('div');
+          streakGraph.className = 'streak-graph';
+
+          const creationDate = new Date(habit.createdAt);
+          const today = new Date();
+          const futureDays = habit.targetDays;
+
+          const daysBetween = Math.floor((today - creationDate) / (1000 * 60 * 60 * 24));
+          const totalCells = daysBetween + 1 + futureDays;
+
+          for (let i = 0; i < totalCells; i++) {
+            const date = new Date(creationDate);
+            date.setDate(creationDate.getDate() + i);
+            const dateKey = date.toISOString().slice(0, 10);
+
+            const cell = document.createElement('div');
+            cell.className = 'streak-cell';
+            cell.title = date.toLocaleDateString('en-US', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            });
+
+            // if (habit.lastCompleted && dateKey <= habit.lastCompleted) {
+            //   const diffDays = Math.floor((new Date(habit.lastCompleted) - date) / (1000 * 60 * 60 * 24));
+            //   if (diffDays < habit.streak) {
+            //     cell.classList.add('active');
+            //   }
+            // }
+
+            if (habit.completedDates && habit.completedDates.includes(dateKey)) {
+              cell.classList.add('active');
+            }
+
+            streakGraph.appendChild(cell);
+          }
+
+          card.appendChild(streakGraph);
+          habitsContainer.appendChild(card);
+        });
+
+        calculateTotals();
+      };
+
+      // Reset completedToday flag daily (checks every minute for demo)
+      const resetDailyCompletion = () => {
+        const today = getToday();
+        let updated = false;
+        habits.forEach(h => {
+          if (h.lastCompleted !== today && h.completedToday) {
+            h.completedToday = false;
+            updated = true;
+          }
+        });
+        if (updated) {
+          saveHabits();
+          renderHabits();
+          calculateTotals();
+        }
+      };
+
+      // Add habit form submit
+      addHabitForm.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const habitName = habitNameInput.value.toUpperCase();
+        const targetDays = Number(targetDaysSelect.value);
+
+        if (!habitName) {
+          showPopup('Please enter a habit name!');
+          return;
+        }
+        if (!targetDays || targetDays < TARGET_STEP || targetDays > MAX_TARGET) {
+          showPopup('Please select a valid target days!');
+          return;
+        }
+
+        // Check duplicates (case insensitive)
+        if (habits.some(h => h.name.toLowerCase() === habitName.toLowerCase())) {
+          showPopup('Habit already exists!');
+          return;
+        }
+
+        habits.push({
+          name: habitName,
+          streak: 0,
+          lastCompleted: null,
+          completedDates: [],
+          completedToday: false,
+          points: 0,
+          rewards: 0,
+          level: 1,
+          targetDays: targetDays,
+          createdAt: new Date().toISOString().slice(0, 10) // ✅ new line
+        });
+
+        habitNameInput.value = '';
+        targetDaysSelect.selectedIndex = 0;
+        saveHabits();
+        renderHabits();
+        showPopup(`Habit "${habitName}" added with target ${targetDays} days!`);
+      });
+
+      // Initial render
+      renderHabits();
+
+      // Reset daily completion check interval
+      setInterval(resetDailyCompletion, 60000);
+    })();
+  </script>
+</body>
+</html>
