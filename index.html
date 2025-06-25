@@ -80,7 +80,7 @@
     /* Stats Section */
     #stats {
       max-width: 1100px;
-      margin: 30px auto;
+      margin: 30px auto 5rem;
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
@@ -110,7 +110,7 @@
     /* Habit Section */
     #habits {
       max-width: 1100px;
-      margin: 20px auto;
+      margin: 30px auto 5rem;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 1.5rem;
@@ -195,7 +195,7 @@
     /* Add Habit Form */
     #addHabitForm {
       max-width: 600px;
-      margin: 20px auto;
+      margin: 30px auto 5rem;
       background: linear-gradient(135deg, #ffffff, #f7f9fc);
       padding: 1rem 2rem;
       border-radius: 20px;
@@ -270,6 +270,13 @@
       }
       #addHabitForm input, #addHabitForm select {
         min-width: 100%;
+      }
+    }
+
+    @media (max-width: 576px) {
+      #hero, section, form {
+        margin-left: 20px !important;
+        margin-right: 20px !important;
       }
     }
 
@@ -369,14 +376,6 @@
     </div>
   </section>
 
-  <!-- Quotes Section -->
-  <section class="quote-box" id="quoteBox">
-    <blockquote>
-      <p id="quoteText"></p>
-      <footer id="quoteSource"></footer>
-    </blockquote>
-  </section>
-
   <!-- Add Habit Form -->
   <form id="addHabitForm" aria-label="Add a new habit">
     <input
@@ -393,14 +392,6 @@
     </select>
     <button type="submit" id="addHabitBtn" aria-live="polite">Add Habit</button>
   </form>
-
-  <!-- Quotes Section -->
-  <section class="quote-box" id="quoteBox">
-    <blockquote>
-      <p id="quoteText"></p>
-      <footer id="quoteSource"></footer>
-    </blockquote>
-  </section>
 
   <!-- Habit List Section -->
   <section id="habits" aria-label="Habit list">
@@ -676,59 +667,59 @@
 
 
     // Fetch random quote from API
+    const quotes = [
+    {
+      text: "Indeed, prayer prohibits immorality and wrongdoing.",
+      source: "সূরা আল-আনকাবুত, ৪৫",
+      translation: "নিশ্চয়ই সালাত অশ্লীলতা ও অন্যায় কাজ থেকে বিরত রাখে।"
+    },
+    {
+      text: "Verily, in the remembrance of Allah do hearts find rest.",
+      source: "সূরা রা'দ, ২৮",
+      translation: "নিশ্চয়ই আল্লাহর স্মরণে হৃদয় প্রশান্ত হয়।"
+    },
+    {
+      text: "And He found you lost and guided [you].",
+      source: "সূরা আদ-দুহা, ৭",
+      translation: "আর তিনি আপনাকে পথহারা পেয়েছিলেন, অতঃপর পথ প্রদর্শন করেছেন।"
+    },
+    {
+      text: "Be patient. Indeed, the promise of Allah is truth.",
+      source: "সূরা আর-রূম, ৬০",
+      translation: "ধৈর্য ধরুন। নিশ্চয়ই আল্লাহর ওয়াদা সত্য।"
+    },
+    {
+      text: "So remember Me; I will remember you.",
+      source: "সূরা বাকারা, ১৫২",
+      translation: "তোমরা আমাকে স্মরণ করো, আমি তোমাদের স্মরণ করব।"
+    }
+  ];
+
+  let quoteIndex = 0;
+
+  function updateQuote() {
     const quoteText = document.getElementById("quoteText");
-const quoteSource = document.getElementById("quoteSource");
+    const quoteSource = document.getElementById("quoteSource");
+    const q = quotes[quoteIndex];
 
-async function fetchQuote() {
-  // Randomly choose between Ayah or Advice
-  if (Math.random() < 0.5) {
-    // Fetch random ayah
-    const res = await fetch("https://api.quran.com/api/v4/verses/random?language=en&translations=21");
-    const data = await res.json();
-    const v = data.verse;
-    return {
-      text: v.text_uthmani + "\n\n" + v.translations[0].text,
-      source: `Quran ${v.chapter_id}:${v.verse_number}`,
-    };
-  } else {
-    // Fetch spiritual advice
-    const res = await fetch("https://hikmah.harizasyraf.com/advice");
-    const data = await res.json();
-    return {
-      text: data.advice,
-      source: data.by || "Prophet ﷺ",
-    };
-  }
-}
+    quoteText.style.opacity = 0;
+    quoteSource.style.opacity = 0;
 
-let currentTimeout;
-
-async function updateQuote() {
-  if (currentTimeout) clearTimeout(currentTimeout);
-  quoteText.style.opacity = 0;
-  quoteSource.style.opacity = 0;
-
-  try {
-    const q = await fetchQuote();
     setTimeout(() => {
-      quoteText.textContent = `"${q.text}"`;
-      quoteSource.textContent = `— ${q.source.trim()}`;
+      quoteText.innerHTML = `"${q.text}"<br><span style='color:#666;font-size:0.95rem'>(${q.translation})</span>`;
+      quoteSource.textContent = `— ${q.source}`;
       quoteText.style.opacity = 1;
       quoteSource.style.opacity = 1;
     }, 500);
-  } catch (e) {
-    quoteText.textContent = "Failed to load inspiration.";
-    quoteSource.textContent = "";
-    quoteText.style.opacity = 1;
+
+    quoteIndex = (quoteIndex + 1) % quotes.length;
   }
 
-  // Schedule next update in 2 minutes
-  currentTimeout = setTimeout(updateQuote, 120000);
-}
+  // Initial quote load
+  updateQuote();
 
-// Initialize
-updateQuote();
-
+  // Change quote every 2 minutes
+  setInterval(updateQuote, 120000);
 
 </script>
 </body>
