@@ -301,6 +301,32 @@
     color: #02C39A;
     text-shadow: none !important;
   }
+
+  /* Quote Box */
+  .quote-box {
+  text-align: center;
+  font-style: italic;
+  padding: 1rem;
+  margin-top: 2rem;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  color: #05445E;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  transition: opacity 0.5s ease;
+}
+
+#quoteText {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+#quoteSource {
+  font-size: 0.95rem;
+  color: #086788;
+}
+
   </style>
 
   <!-- FontAwesome for Islamic icons -->
@@ -319,6 +345,14 @@
     </div>
   </section>
 
+  <!-- Quotes Section -->
+  <section class="quote-box" id="quoteBox">
+    <blockquote>
+      <p id="quoteText"></p>
+      <footer id="quoteSource"></footer>
+    </blockquote>
+  </section>
+
   <!-- Stats Section -->
   <section id="stats" aria-label="User statistics overview">
     <div class="stat-card" tabindex="0">
@@ -333,6 +367,14 @@
       <div>Active Habits</div>
       <div class="stat-number" id="totalHabits">0</div>
     </div>
+  </section>
+
+  <!-- Quotes Section -->
+  <section class="quote-box" id="quoteBox">
+    <blockquote>
+      <p id="quoteText"></p>
+      <footer id="quoteSource"></footer>
+    </blockquote>
   </section>
 
   <!-- Add Habit Form -->
@@ -351,6 +393,14 @@
     </select>
     <button type="submit" id="addHabitBtn" aria-live="polite">Add Habit</button>
   </form>
+
+  <!-- Quotes Section -->
+  <section class="quote-box" id="quoteBox">
+    <blockquote>
+      <p id="quoteText"></p>
+      <footer id="quoteSource"></footer>
+    </blockquote>
+  </section>
 
   <!-- Habit List Section -->
   <section id="habits" aria-label="Habit list">
@@ -623,6 +673,63 @@
       // Reset daily completion check interval
       setInterval(resetDailyCompletion, 60000);
     })();
-  </script>
+
+
+    // Fetch random quote from API
+    const quoteText = document.getElementById("quoteText");
+const quoteSource = document.getElementById("quoteSource");
+
+async function fetchQuote() {
+  // Randomly choose between Ayah or Advice
+  if (Math.random() < 0.5) {
+    // Fetch random ayah
+    const res = await fetch("https://api.quran.com/api/v4/verses/random?language=en&translations=21");
+    const data = await res.json();
+    const v = data.verse;
+    return {
+      text: v.text_uthmani + "\n\n" + v.translations[0].text,
+      source: `Quran ${v.chapter_id}:${v.verse_number}`,
+    };
+  } else {
+    // Fetch spiritual advice
+    const res = await fetch("https://hikmah.harizasyraf.com/advice");
+    const data = await res.json();
+    return {
+      text: data.advice,
+      source: data.by || "Prophet ﷺ",
+    };
+  }
+}
+
+let currentTimeout;
+
+async function updateQuote() {
+  if (currentTimeout) clearTimeout(currentTimeout);
+  quoteText.style.opacity = 0;
+  quoteSource.style.opacity = 0;
+
+  try {
+    const q = await fetchQuote();
+    setTimeout(() => {
+      quoteText.textContent = `"${q.text}"`;
+      quoteSource.textContent = `— ${q.source.trim()}`;
+      quoteText.style.opacity = 1;
+      quoteSource.style.opacity = 1;
+    }, 500);
+  } catch (e) {
+    quoteText.textContent = "Failed to load inspiration.";
+    quoteSource.textContent = "";
+    quoteText.style.opacity = 1;
+  }
+
+  // Schedule next update in 2 minutes
+  currentTimeout = setTimeout(updateQuote, 120000);
+}
+
+// Initialize
+updateQuote();
+
+
+</script>
 </body>
 </html>
