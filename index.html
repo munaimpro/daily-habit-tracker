@@ -395,7 +395,7 @@
 
     <!-- Sound Effect Start -->
     <!-- enable autoplay on screen load -->
-    <audio src="sound/surah.mp3" autoplay></audio>
+    <audio id="surahAudio" src="sound/surah.mp3" muted></audio>
     <!-- Sound Effect End -->
   </form>
 
@@ -726,6 +726,24 @@
 
   // Change quote every 2 minutes
   setInterval(updateQuote, 120000);
+
+  // Preload audio
+  window.addEventListener('load', () => {
+    const audio = document.getElementById("surahAudio");
+    audio.play().catch(e => console.warn("Autoplay failed"));
+  });
+
+  // Unmute when user moves
+  const unlockAudio = () => {
+    const audio = document.getElementById("surahAudio");
+    audio.muted = false;
+    audio.play();
+    window.removeEventListener("mousemove", unlockAudio);
+    window.removeEventListener("touchstart", unlockAudio);
+  };
+
+  window.addEventListener("mousemove", unlockAudio);
+  window.addEventListener("touchstart", unlockAudio);
 
 </script>
 </body>
