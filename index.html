@@ -395,7 +395,8 @@
 
     <!-- Sound Effect Start -->
     <!-- enable autoplay on screen load -->
-    <audio id="surahAudio" src="sound/surah.mp3" muted></audio>
+     <!-- stop autoplay, start to play on user event -->
+    <audio id="surahAudio" src="sound/surah.mp3" preload="auto"></audio>
     <!-- Sound Effect End -->
   </form>
 
@@ -728,22 +729,23 @@
   setInterval(updateQuote, 120000);
 
   // Preload audio
-  window.addEventListener('load', () => {
-    const audio = document.getElementById("surahAudio");
-    audio.play().catch(e => console.warn("Autoplay failed"));
-  });
+  const audio = document.getElementById("surahAudio");
 
-  // Unmute when user moves
-  const unlockAudio = () => {
-    const audio = document.getElementById("surahAudio");
-    audio.muted = false;
-    audio.play();
-    window.removeEventListener("mousemove", unlockAudio);
-    window.removeEventListener("touchstart", unlockAudio);
+  // Function to play audio only once
+  const playOnActivity = () => {
+    audio.play().catch(e => {
+      console.warn("Audio play blocked:", e);
+    });
+
+    // Remove listeners after first play to avoid multiple triggers
+    window.removeEventListener("mousemove", playOnActivity);
+    window.removeEventListener("scroll", playOnActivity);
+    window.removeEventListener("touchstart", playOnActivity); // for mobile
+    window.removeEventListener("click", playOnActivity);
   };
 
-  window.addEventListener("mousemove", unlockAudio);
-  window.addEventListener("touchstart", unlockAudio);
+  window.addEventListener("mousemove", playOnActivity);
+  window.addEventListener("touchstart", playOnActivity);
 
 </script>
 </body>
