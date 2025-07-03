@@ -6,8 +6,44 @@
   <title>Islamic Habit Tracker</title>
   <!-- Bootstrap CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet" />
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="image/favicon.ico" />
+  <!-- Favicon for browser tab -->
+  <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+  <!-- Favicon for modern browsers -->
+  <link rel="apple-touch-icon" sizes="180x180" href="image/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="image/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="image/favicon-16x16.png">
+  <link rel="manifest" href="image/site.webmanifest">
+  <!-- General Meta Tags -->
+  <meta name="description" content="Track your daily good habits with faith and discipline — earn rewards, points, and grow your spiritual streak." />
+  <meta name="keywords" content="Islamic, Habit Tracker, Daily Habits, Good Habits, Spiritual Growth, Rewards, Points, Streaks" />
+  <meta name="author" content="Munaim Khan" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+  <!-- Social Meta Tags -->
+  <meta property="og:title" content="Islamic Habit Tracker">
+  <meta property="og:description" content="Track your Islamic habits with rewards, milestones and daily streaks.">
+  <meta property="og:image" content="https://daily-habit-tracker-munaimpro.com/favicon.png">
+  <meta property="og:url" content="https://daily-habit-tracker-munaimpro.com">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Islamic Habit Tracker">
+  <meta name="twitter:description" content="Track your Islamic habits with rewards, milestones and daily streaks.">
+  <meta name="twitter:image" content="https://daily-habit-tracker-munaimpro.com/favicon.png">
+  <meta name="twitter:site" content="@munaimpro">
+  <meta name="twitter:creator" content="@munaimpro">
+  <meta name="twitter:domain" content="daily-habit-tracker-munaimpro.com">
+  <meta name="twitter:image:alt" content="Islamic Habit Tracker Logo">
+  <meta name="twitter:app:name:iphone" content="Islamic Habit Tracker">
+  <meta name="twitter:app:id:iphone" content="1234567890">
+  <meta name="twitter:app:name:googleplay" content="Islamic Habit Tracker">
+  <meta name="twitter:app:id:googleplay" content="com.munaimpro.islamic.habit.tracker">
+  <meta name="twitter:app:url:iphone" content="https://daily-habit-tracker-munaimpro.com">
+  <meta name="twitter:app:url:googleplay" content="https://daily-habit-tracker-munaimpro.com">
+  <meta name="twitter:app:url:ipad" content="https://daily-habit-tracker-munaimpro.com">
+  <meta name="twitter:app:url:android" content="https://daily-habit-tracker-munaimpro.com">
+  <meta name="twitter:app:name:ipad" content="Islamic Habit Tracker">
+  <meta name="twitter:app:id:ipad" content="1234567890">
+  <meta name="twitter:app:id:android" content="com.munaimpro.islamic.habit.tracker">
 
   <style>
     body {
@@ -15,7 +51,6 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #0a3d62;
       min-height: 100vh;
-      padding-bottom: 50px;
     }
 
     /* Hero Section with background + dark overlay */
@@ -335,8 +370,32 @@
   color: #086788;
 }
 
-  </style>
+.app-footer {
+  background: #f1f9f7;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 1rem;
+  color: #05445E;
+  border-top: 2px solid #02C39A;
+  margin-top: 4rem;
+}
 
+.app-footer a {
+  color: #007B83;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.app-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .app-footer {
+    font-size: 0.95rem;
+  }
+}
+  </style>
   <!-- FontAwesome for Islamic icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
@@ -404,6 +463,14 @@
   <section id="habits" aria-label="Habit list">
     <!-- Habit cards inserted here -->
   </section>
+
+  <!-- Footer Section -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>আপনার মতামত পাঠান এই ইমেইলে: <a target="_blank" href="mailto:khanmail2599@gmail.com">khanmail2599@gmail.com</a></p>
+      <p>Built with 🖤 by <strong>Munaim Khan</strong></p>
+    </div>
+  </footer>
 
   <!-- Animated Popup -->
   <div id="popup" role="alert" aria-live="assertive"></div>
